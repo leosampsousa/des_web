@@ -1,0 +1,212 @@
+ <!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+	<title>Desenvolvimento web</title>
+</head>
+<body>
+
+<div id="app">
+	<div id = "menu", style = "padding-left: 10%; padding-right: 10%">
+		<h1>Sistema de controle de alunos</h1>
+		<form @submit.prevent = "inserirAluno" autocomplete="off" id="formulario">
+			<div class="card text-center">
+	  			<div class="card-header">
+	  				<div class = "float-left">Formulário de alunos</div>
+	  			</div>
+	  			<div class="card-body" style = "padding-left: 3%">
+
+	  				<div class="form-group row">
+	  					<div class = "col-xs-4">
+	    					<label for="matricula" style="float:left;">Matrícula</label>
+	    					<input type="number" class="form-control" v-model="matricula" id="matricula" placeholder="Digite a matrícula" required>
+	    				</div>
+
+	    				<div class = "col-sm" >
+	    					<label for="nome" style="float:left;">Nome</label>
+	    					<input type="text" class="form-control" v-model="nome" id="nome" placeholder="Digite o nome" required><br>
+	    				</div>
+	  				
+	  				</div>
+
+	  				<div class="form-group row">
+	  					<div class = "col-xs-4">
+	    					<label for="data_nascimento" style="float:left;">Data de Nascimento</label>
+	    					<input type="text" class="form-control" v-model="data_nascimento" id="data_nascimento" placeholder="dd/mm/aaaa" required>
+	    				</div>
+
+	    				<div class = "col-sm">
+	    					<label for="email" style="float:left;">Email</label>
+	    					<input type="email" class="form-control" v-model="email" id="email" placeholder="Digite o email" required><br>
+	    				</div>
+	  				
+	  				</div>
+
+
+	  				<div class="form-group row">
+	  					<div class = "col-xs-2">
+	    					<label for="ddd" style="float:left;">DDD</label>
+	    					<input type="text" class="form-control" v-model="DDD" id="DDD" placeholder="DDD" required>
+	    				</div>
+
+	    				<div class = "col-xs-4" style="padding-left: 3%">
+	    					<label for="telefone" style="float:left;">Telefone</label>
+	    					<input type="text" class="form-control" v-model="telefone" id="telefone" placeholder="Digite o telefone" required><br>
+	    				</div>
+
+	    				<div class = "col-xs-4" style="padding-left: 3%">
+		    				<label for="operadora">Operadora</label>
+		    					<select class="form-control" v-model="operadora" id="operadora" required>
+		      						<option value="Oi">Oi</option>
+		      						<option value="Tim">Tim</option>
+		      						<option value="Vivo">Vivo</option>
+		      						<option value="Claro">Claro</option>
+		    					</select>
+	    				</div>
+	  				
+	  				</div>
+
+
+	  				<div class="form-group row">
+
+	    				<div class = "col-xs-4">
+		    				<label for="campus" style="float:left;">Campus</label>
+		    					<select class="form-control" v-model="campus" id="campus" required>
+									<option class = "form-control" value ="">Selecione um campus</option>
+									<option value="Pici">Pici</option>
+									<option value="Benfica">Benfica</option>
+									<option value="Porangabussu">Porangabussu</option>
+		    					</select>
+	    				</div>
+
+	    				<div class = "col-sm">
+		    				<label for="curso" style="float:left;">Curso</label>
+		    					<select class="form-control" id="curso" v-model="curso" required>
+		    						<option v-model="option1">{{option1}}</option>
+		    						<option v-model="option1">{{option2}}</option>
+		    						<option v-model="option1">{{option3}}</option>
+		    					</select>
+	    				</div>
+	  				
+	  				</div>
+
+	    			
+	  			</div>
+	  			<div class="card-footer text-muted">
+	  				<div class = "buttons">
+	  					<div class = "float-right">
+	  						<button type="submit" class="btn btn-primary" v-on:click="inserirAluno()">Inserir Aluno</button>
+							<button type="reset" class="btn btn-primary" v-on:click="limpar()">Limpar</button>
+	    				</div>
+	    			</div>
+	  			</div>
+			</div>
+		</form>
+
+	</div>
+
+	<div id="menu_tabela" style = "padding-left: 10%; padding-right: 10%; padding-top: 2%">
+		<table id="tabela" class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">Matrícula</th>
+					<th scope="col">Nome</th>
+					<th scope="col">Ações</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="aluno in listaAlunos">
+                    <td>{{aluno.matricula}}</td>
+                    <td>{{aluno.nome}}</td>
+                    <td><button type="button" class="btn btn-danger" v-on:click="removerAluno(aluno.matricula)">Excluir</button></td>
+                </tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+<script>
+
+var app = new Vue({
+	el: '#app',
+
+	data: {
+
+        listaAlunos: [],
+        matricula: '',
+        nome: '',
+        data_nascimento: '',
+        email: '',
+        DDD: '',
+        telefone: '',
+        operadora: '',
+        campus: '',
+        curso: '',
+        option1: '',
+        option2: '',
+        option3: '',
+        auxiliarAluno: '',
+
+	},
+
+	created(){
+		this.carregarAluno();
+	},
+
+	methods:{
+		carregarAluno(){
+			axios.get('http://localhost:3000/api/alunos').
+				then(resp => this.listaAlunos = resp.data);
+		},
+
+		inserirAluno() {
+
+		},
+
+		removerAluno(){
+
+		},
+
+		limpar(){
+
+		},
+	},
+
+	watch: {
+	    campus: function(val){
+	        if(val == "Pici"){
+	            this.option1 = 'Computação', 
+	            this.option2 = 'Matemática', 
+	            this.option3 = 'Geologia'
+	        }
+	        if(val == "Benfica"){
+	            this.option1 = 'Letras', 
+	            this.option2 = 'Filosofia', 
+	            this.option3 = 'Direito'
+	        }
+	        if(val == "Porangabuçu"){
+	            this.option1 = 'Medicina', 
+	            this.option2 = 'Odontologia', 
+	            this.option3 = 'Farmácia'
+	        }
+	    },
+	},
+
+});
+
+</script>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+
+
+</html> 

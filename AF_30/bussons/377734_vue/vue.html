@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Page Title</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div id="app">
+
+        <div class="container">
+            <h1>Sistema de Controle de aluno</h1>
+            <div class="jumbotron" style="margin-top: 10px">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 style="color:blue; margin-top: -20px;">Formulário do Aluno</h3>
+                            <img src="sobre.png" title="Sobre o autor"
+                                style="width: 30px; height: 30px; margin-top: -50px;" data-toggle='modal'
+                                data-target='#sobreAutor' align="right">
+                    </div>
+                    <hr><br>
+                    <div class="panel-body">
+                        <form id="formulario" action="">
+                            <fieldset>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="exampleFormControlInput1">Matricula</label>
+                                        <input type="number
+                                        " class="form-control" v-model="matricula"
+                                            placeholder="Adicione a matrícula do aluno" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="exampleFormControlInput1">Nome</label>
+                                        <input type="text" class="form-control" v-model="nome"
+                                            placeholder="Adicione o nome do aluno" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="exampleFormControlInput1">Data de Nascimento</label required>
+                                        <input type="text" class="form-control" v-model="dataNascimento">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="exampleFormControlInput1">Email</label>
+                                        <input type="email" class="form-control" v-model="email"
+                                            placeholder="Adicione o email do aluno" required>
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                        <label for="exampleFormControlInput1">DDD</label>
+                                        <input type="text" class="form-control" v-model="ddd" placeholder="DDD"
+                                            required>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="exampleFormControlInput1">Telefone</label>
+                                        <input type="text" class="form-control" v-model="telefone"
+                                            placeholder="Adicione o telefone do aluno" required>
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                        <label for="exampleFormControlSelect1">Operadora</label>
+                                        <select class="form-control" v-model="operadora" required>
+                                            <option>OI</option>
+                                            <option>TIM</option>
+                                            <option>VIVO</option>
+                                            <option>CLARO</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="exampleFormControlSelect1">Campus</label>
+                                        <select class="form-control" v-model="campus" required>
+                                            <option value="Pici">Pici</option>
+                                            <option value="Benfica">Benfica</option>
+                                            <option value="Porangabuçu">Porangabuçu</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="exampleFormControlSelect1">Curso</label>
+                                        <select class="form-control" v-model="curso" required>
+                                            <option v-model="option1">{{option1}}</option>
+                                            <option v-model="option2">{{option2}}</option>
+                                            <option v-model="option3">{{option3}}</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin-top: 10px;">
+                                        <button type="button" class="btn btn-info" v-on:click="limpar()">Limpar</button>
+                                        <button type="submit" class="btn btn-primary" id="botaoAdd">Adicionar</button>
+                                    </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="sobreAutor" role="dialog">
+            <div class="modal-dialog">
+            
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                  <img src="icone.jpeg" style="width: 150px; height: 150px; margin-right: 20px; border-radius: 150px" align="left">	
+                  <p><b>Gabriel Loiola Bussons</b></p>
+                  <p>Sou estudante de Ciência da Computação na Universidade Federal do Ceará (UFC) e sou autor dessa página.</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Matrícula</th>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="a in listaAlunos">
+                                <td>{{a.matricula}}</td>
+                                <td>{{a.nome}}</td>
+                                <td><button type="button" class="btn btn-danger" v-on:click="excluir(a.matricula)">Excluir</button></td>
+                                
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
+
+    <script>
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                listaAlunos: [],
+                matricula: '',
+                nome: '',
+                dataNascimento: '',
+                email: '',
+                ddd: '',
+                telefone: '',
+                operadora: '',
+                campus: '',
+                curso: '',
+                option1: '',
+                option2: '',
+                option3: '',
+                auxiliarAluno: '',
+
+                },
+
+            created(){
+                this.carregarAluno();
+            },
+            methods: {
+
+                carregarAluno(){
+                    axios.get('http://localhost:3000/api/alunos').
+                        then(resp => this.listaAlunos = resp.data);
+                },
+
+                adicionar() {
+
+                    axios.post('http://localhost:3000/api/alunos', {
+                        "matricula": this.matricula,
+                        "nome": this.nome,
+                        "data_nascimento": this.dataNascimento,
+                        "email": this.email,
+                        "DDD": this.ddd,
+                        "telefone": this.telefone,
+                        "operadora": this.operadora,
+                        "campus": this.campus,
+                        "curso": this.curso,
+                    })
+                    .then(resp => this.carregarAluno())
+                    .catch(err => alert("Não foi possível adicionar o aluno - " + err.response.data.error))
+                     
+                },
+
+
+                excluir(matriculaAluno){
+
+                    axios.delete('http://localhost:3000/api/alunos/' + matriculaAluno)
+                                .then(resp => this.carregarAluno())
+                                .catch(err => alert("Não foi possível excluir o aluno - " + err.response.data.error));
+                },
+                limpar(){
+                    this.matricula = '',
+                    this.nome = '',
+                    this.dataNascimento = '',
+                    this.email = '',
+                    this.ddd = '',
+                    this.telefone = '',
+                    this.operadora = '',
+                    this.campus = '',
+                    this.curso = '',
+                    this.option1 = '',
+                    this.option2 = '',
+                    this.option3 = ''
+                }
+            },
+            watch: {
+                campus: function(val){
+                    if(val == "Pici"){
+                        this.option1 = 'Computação', 
+                        this.option2 = 'Matemática', 
+                        this.option3 = 'Geologia'
+                    }
+                    if(val == "Benfica"){
+                        this.option1 = 'Letras', 
+                        this.option2 = 'Filosofia', 
+                        this.option3 = 'Direito'
+                    }
+                    if(val == "Porangabuçu"){
+                        this.option1 = 'Medicina', 
+                        this.option2 = 'Odontologia', 
+                        this.option3 = 'Farmácia'
+                    }
+                },
+            },
+        })
+    </script>
+
+    <script type="text/javascript">
+        var cancelarSubmit = function(event) {
+        event.preventDefault();
+        app.adicionar();
+        };
+
+        var form = document.getElementById("formulario");
+        form.addEventListener("submit", cancelarSubmit, true);
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>
